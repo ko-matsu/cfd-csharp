@@ -25,7 +25,12 @@ namespace Cfd
   public class Privkey
   {
     private string privkey;
+    private string privkey_wif;
     private Pubkey pubkey;
+
+    public Privkey() {
+      privkey = "";
+    }
 
     public Privkey(string privkey_hex) {
       privkey = privkey_hex;
@@ -35,8 +40,20 @@ namespace Cfd
       //  char** pubkey);
     }
 
+    public Privkey(string wif, bool is_compressed) {
+      privkey_wif = wif;
+      // FIXME check format
+      // CfdGetPubkeyFromPrivkey(
+      //  void* handle, const char* privkey, const char* wif, bool is_compressed,
+      //  char** pubkey);
+    }
+
     public string ToHexString() {
       return privkey;
+    }
+
+    public string GetWif() {
+      return privkey_wif;
     }
 
     public Pubkey GetPubkey() {

@@ -24,12 +24,18 @@ namespace Cfd
       CfdErrorCode ret = CScript.CfdParseScript(
         handle.GetHandle(), script_hex, out IntPtr script_item_handle,
         out uint script_item_num);
+      if (ret != CfdErrorCode.Success) {
+        CUtil.ThrowError(handle, ret);
+      }
       try {
         script_items = new string[script_item_num];
         for (uint index = 0; index < script_item_num; ++index) {
           ret = CScript.CfdGetScriptItem(
             handle.GetHandle(), script_item_handle, index,
             out IntPtr script_item);
+          if (ret != CfdErrorCode.Success) {
+            CUtil.ThrowError(handle, ret);
+          }
           script_items[index] = CUtil.ConvertToString(script_item);
         }
       } finally {
