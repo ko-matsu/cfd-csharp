@@ -90,6 +90,7 @@ jobs:
     - name: create archive file
       run: |
         cd dist
+        del gen_context.exe
         Compress-Archive -Path ./* -DestinationPath ../cfd.zip
         cd ..
         echo "---- dump zip file ----"
