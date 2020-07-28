@@ -2119,6 +2119,22 @@ namespace Cfd
         exponent, minimumBits, effectiveFeeRate, -1, -1);
     }
 
+    /// <summary>
+    /// Fund transaction.
+    /// </summary>
+    /// <param name="txinList">setting txin utxo list</param>
+    /// <param name="utxoList">utxo list</param>
+    /// <param name="targetAssetAmountMap">target amount of asset. Amount more than the specified amount is set in txout. default is 0 (disable).</param>
+    /// <param name="reservedAddressMap">reserved address of asset. address for adding txout. Also serves as a change address.</param>
+    /// <param name="feeAsset">asset by fee</param>
+    /// <param name="isBlind">blind flag</param>
+    /// <param name="effectiveFeeRate">fee rate</param>
+    /// <param name="exponent">blinding exponent</param>
+    /// <param name="minimumBits">blinding minimum bits</param>
+    /// <param name="longTermFeeRate">long-term fee rate</param>
+    /// <param name="dustFeeRate">dust fee rate</param>
+    /// <param name="knapsackMinChange">knapsack min change value. knapsack logic's threshold. Recommended value is 1.</param>
+    /// <returns>used address list.</returns>
     public string[] FundRawTransaction(
       ElementsUtxoData[] txinList, ElementsUtxoData[] utxoList,
       IDictionary<ConfidentialAsset, long> targetAssetAmountMap,

@@ -1442,6 +1442,18 @@ namespace Cfd
         effectiveFeeRate, effectiveFeeRate, -1, -1);
     }
 
+    /// <summary>
+    /// Fund transaction.
+    /// </summary>
+    /// <param name="txinList">setting txin utxo list</param>
+    /// <param name="utxoList">utxo list</param>
+    /// <param name="targetAmount">Amount more than the specified amount is set in txout. default is 0 (disable).</param>
+    /// <param name="reservedAddress">address for adding txout. Also serves as a change address.</param>
+    /// <param name="effectiveFeeRate">fee rate</param>
+    /// <param name="longTermFeeRate">long-term fee rate</param>
+    /// <param name="dustFeeRate">dust fee rate</param>
+    /// <param name="knapsackMinChange">knapsack min change value. knapsack logic's threshold. Recommended value is 1.</param>
+    /// <returns>used address list.</returns>
     public string FundRawTransaction(UtxoData[] txinList, UtxoData[] utxoList,
       long targetAmount, string reservedAddress,
       double effectiveFeeRate, double longTermFeeRate, long dustFeeRate, long knapsackMinChange)
