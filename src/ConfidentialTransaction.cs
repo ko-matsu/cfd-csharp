@@ -2141,7 +2141,7 @@ namespace Cfd
       IDictionary<ConfidentialAsset, string> reservedAddressMap,
       ConfidentialAsset feeAsset,
       bool isBlind, double effectiveFeeRate, int exponent, int minimumBits,
-      double longTermFeeRate, long dustFeeRate, long knapsackMinChange)
+      double longTermFeeRate, double dustFeeRate, long knapsackMinChange)
     {
       if (utxoList is null)
       {

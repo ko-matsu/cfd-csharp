@@ -1456,7 +1456,7 @@ namespace Cfd
     /// <returns>used address list.</returns>
     public string FundRawTransaction(UtxoData[] txinList, UtxoData[] utxoList,
       long targetAmount, string reservedAddress,
-      double effectiveFeeRate, double longTermFeeRate, long dustFeeRate, long knapsackMinChange)
+      double effectiveFeeRate, double longTermFeeRate, double dustFeeRate, long knapsackMinChange)
     {
       if (utxoList is null)
       {
