@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -58,8 +59,14 @@ namespace Cfd.xTests
         tx.ToHexString());
 
       Address addr11 = new Address(pubkey1, CfdAddressType.P2wpkh, CfdNetworkType.Regtest);
-      bool isVerify = tx.VerifySign(outpoint1, addr11, addr11.GetAddressType(), 50000);
-      Assert.True(isVerify);
+      try
+      {
+        tx.VerifySign(outpoint1, addr11, addr11.GetAddressType(), 50000);
+      }
+      catch (Exception e)
+      {
+        Assert.Null(e);
+      }
 
       string json = Transaction.DecodeRawTransaction(tx);
       output.WriteLine(json);

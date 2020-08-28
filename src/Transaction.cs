@@ -1227,16 +1227,16 @@ namespace Cfd
       }
     }
 
-    public bool VerifySign(OutPoint outpoint, Address address, CfdAddressType addressType, long satoshiValue)
+    public void VerifySign(OutPoint outpoint, Address address, CfdAddressType addressType, long satoshiValue)
     {
       if (outpoint is null)
       {
         throw new ArgumentNullException(nameof(outpoint));
       }
-      return VerifySign(outpoint.GetTxid(), outpoint.GetVout(), address, addressType, satoshiValue);
+      VerifySign(outpoint.GetTxid(), outpoint.GetVout(), address, addressType, satoshiValue);
     }
 
-    public bool VerifySign(Txid txid, uint vout, Address address, CfdAddressType addressType, long satoshiValue)
+    public void VerifySign(Txid txid, uint vout, Address address, CfdAddressType addressType, long satoshiValue)
     {
       if (txid is null)
       {
@@ -1252,16 +1252,11 @@ namespace Cfd
             handle.GetHandle(), defaultNetType, tx, txid.ToHexString(), vout,
             address.ToAddressString(), (int)addressType, "",
             satoshiValue, "");
-        if (ret == CfdErrorCode.Success)
-        {
-          return true;
-        }
-        else if (ret != CfdErrorCode.SignVerificationError)
+        if (ret != CfdErrorCode.Success)
         {
           handle.ThrowError(ret);
         }
       }
-      return false;
     }
 
     public bool VerifySignature(OutPoint outpoint, CfdHashType hashType,

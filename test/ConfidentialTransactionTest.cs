@@ -501,8 +501,14 @@ namespace Cfd.xTests
       Assert.Equal(expTxHex, tx.ToHexString());
 
       Address addr = new Address(pubkey, CfdAddressType.P2wpkh, CfdNetworkType.ElementsRegtest);
-      bool isVerifySign = tx.VerifySign(new OutPoint(txid, vout), addr, addr.GetAddressType(), value);
-      Assert.True(isVerifySign);
+      try
+      {
+        tx.VerifySign(new OutPoint(txid, vout), addr, addr.GetAddressType(), value);
+      }
+      catch (Exception e)
+      {
+        Assert.Null(e);
+      }
     }
 
     [Fact]
@@ -523,8 +529,14 @@ namespace Cfd.xTests
       Assert.Equal(expTxHex, tx.ToHexString());
 
       Address addr = new Address(pubkey, CfdAddressType.P2wpkh, CfdNetworkType.ElementsRegtest);
-      bool isVerifySign = tx.VerifySign(txid, vout, addr, addr.GetAddressType(), value);
-      Assert.True(isVerifySign);
+      try
+      {
+        tx.VerifySign(txid, vout, addr, addr.GetAddressType(), value);
+      }
+      catch (Exception e)
+      {
+        Assert.Null(e);
+      }
     }
 
     [Fact]
@@ -568,8 +580,72 @@ namespace Cfd.xTests
       Assert.Equal(expTxHex, tx.ToHexString());
 
       Address addr = new Address(redeemScript, CfdAddressType.P2wsh, CfdNetworkType.ElementsRegtest);
-      bool isVerifySign = tx.VerifySign(txid, vout, addr, addr.GetAddressType(), value);
-      Assert.True(isVerifySign);
+      try
+      {
+        tx.VerifySign(txid, vout, addr, addr.GetAddressType(), value);
+      }
+      catch (Exception e)
+      {
+        Assert.Null(e);
+      }
+    }
+
+    [Fact]
+    public void VerifySignFailTest()
+    {
+      string txHex = "0200000000020f231181a6d8fa2c5f7020948464110fbcc925f94d673d5752ce66d00250a1570000000000ffffffff0f231181a6d8fa2c5f7020948464110fbcc925f94d673d5752ce66d00250a1570100008000ffffffffd8bbe31bc590cbb6a47d2e53a956ec25d8890aefd60dcfc93efd34727554890b0683fe0819a4f9770c8a7cd5824e82975c825e017aff8ba0d6a5eb4959cf9c6f010000000023c346000004017981c1f171d7973a1fd922652f559f47d6d1506a4be2394b27a54951957f6c1801000000003b947f6002200d8510dfcf8e2330c0795c771d1e6064daab2f274ac32a6e2708df9bfa893d17a914ef3e40882e17d6e477082fcafeb0f09dc32d377b87010bad521bafdac767421d45b71b29a349c7b2ca2a06b5d8e3b5898c91df2769ed010000000029b9270002cc645552109331726c0ffadccab21620dd7a5a33260c6ac7bd1c78b98cb1e35a1976a9146c22e209d36612e0d9d2a20b814d7d8648cc7a7788ac017981c1f171d7973a1fd922652f559f47d6d1506a4be2394b27a54951957f6c1801000000000000c350000001cdb0ed311810e61036ac9255674101497850f5eee5e4320be07479c05473cbac010000000023c3460003ce4c4eac09fe317f365e45c00ffcf2e9639bc0fd792c10f72cdc173c4e5ed8791976a9149bdcb18911fa9faad6632ca43b81739082b0a19588ac00000000";
+      ConfidentialTransaction tx = new ConfidentialTransaction(txHex);
+
+      Pubkey pubkey1 = new Pubkey("02715ed9a5f16153c5216a6751b7d84eba32076f0b607550a58b209077ab7c30ad");
+      Privkey privkey1 = new Privkey("cRVLMWHogUo51WECRykTbeLNbm5c57iEpSegjdxco3oef6o5dbFi");
+      Pubkey pubkey2 = new Pubkey("02bfd7daa5d113fcbd8c2f374ae58cbb89cbed9570e898f1af5ff989457e2d4d71");
+      Privkey privkey2 = new Privkey("cQUTZ8VbWNYBEtrB7xwe41kqiKMQPRZshTvBHmkoJGaUfmS5pxzR");
+      Pubkey[] pubkeyList = { pubkey2, pubkey1 };
+
+      long satoshiValue = 13000000000000;
+      ConfidentialValue value = new ConfidentialValue(satoshiValue);
+      Txid txid = new Txid("57a15002d066ce52573d674df925c9bc0f1164849420705f2cfad8a68111230f");
+      uint vout = 0;
+
+      Script redeemScript = Script.CreateMultisigScript(2, pubkeyList);
+
+      CfdHashType hashType = CfdHashType.P2wsh;
+      SignatureHashType sighashType = new SignatureHashType(CfdSighashType.All, false);
+      ByteData sighash = tx.GetSignatureHash(txid, vout, hashType, redeemScript, value, sighashType);
+      Assert.Equal("d17f091203341a0d1f0101c6d010a40ce0f3cef8a09b2b605b77bb6cfc23359f", sighash.ToHexString());
+
+      SignParameter signature1 = privkey1.CalculateEcSignature(sighash);
+      Assert.Equal("2ce4acde192e4109832d46970b510158d42fc156c92afff137157ebfc2a03e2a0b7dfd3a92770d79d29b3c55fb6325b22bce0e1362de74b2dac80d9689b5a89b", signature1.ToHexString());
+      signature1.SetDerEncode(sighashType);
+      signature1.SetRelatedPubkey(pubkey2);
+
+      SignParameter signature2 = privkey2.CalculateEcSignature(sighash);
+      Assert.Equal("795dbf165d3197fe27e2b73d57cacfb8d742029c972b109040c7785aee4e75ea65f7a985efe82eba1d0e0cafd7cf711bb8c65485bddc4e495315dd92bd7e4a79", signature2.ToHexString());
+      signature2.SetDerEncode(sighashType);
+      signature2.SetRelatedPubkey(pubkey1);
+
+      SignParameter[] signList = { signature1, signature2 };
+      tx.AddMultisigSign(new OutPoint(txid, vout), hashType, signList, redeemScript);
+
+      output.WriteLine("tx : " + tx.ToHexString());
+      string expTxHex = "0200000001020f231181a6d8fa2c5f7020948464110fbcc925f94d673d5752ce66d00250a1570000000000ffffffff0f231181a6d8fa2c5f7020948464110fbcc925f94d673d5752ce66d00250a1570100008000ffffffffd8bbe31bc590cbb6a47d2e53a956ec25d8890aefd60dcfc93efd34727554890b0683fe0819a4f9770c8a7cd5824e82975c825e017aff8ba0d6a5eb4959cf9c6f010000000023c346000004017981c1f171d7973a1fd922652f559f47d6d1506a4be2394b27a54951957f6c1801000000003b947f6002200d8510dfcf8e2330c0795c771d1e6064daab2f274ac32a6e2708df9bfa893d17a914ef3e40882e17d6e477082fcafeb0f09dc32d377b87010bad521bafdac767421d45b71b29a349c7b2ca2a06b5d8e3b5898c91df2769ed010000000029b9270002cc645552109331726c0ffadccab21620dd7a5a33260c6ac7bd1c78b98cb1e35a1976a9146c22e209d36612e0d9d2a20b814d7d8648cc7a7788ac017981c1f171d7973a1fd922652f559f47d6d1506a4be2394b27a54951957f6c1801000000000000c350000001cdb0ed311810e61036ac9255674101497850f5eee5e4320be07479c05473cbac010000000023c3460003ce4c4eac09fe317f365e45c00ffcf2e9639bc0fd792c10f72cdc173c4e5ed8791976a9149bdcb18911fa9faad6632ca43b81739082b0a19588ac000000000000040047304402202ce4acde192e4109832d46970b510158d42fc156c92afff137157ebfc2a03e2a02200b7dfd3a92770d79d29b3c55fb6325b22bce0e1362de74b2dac80d9689b5a89b014730440220795dbf165d3197fe27e2b73d57cacfb8d742029c972b109040c7785aee4e75ea022065f7a985efe82eba1d0e0cafd7cf711bb8c65485bddc4e495315dd92bd7e4a790147522102bfd7daa5d113fcbd8c2f374ae58cbb89cbed9570e898f1af5ff989457e2d4d712102715ed9a5f16153c5216a6751b7d84eba32076f0b607550a58b209077ab7c30ad52ae00000000000000000000000000";
+      Assert.Equal(expTxHex, tx.ToHexString());
+
+      Address addr = new Address(redeemScript, CfdAddressType.P2wsh, CfdNetworkType.ElementsRegtest);
+      try
+      {
+        tx.VerifySign(txid, vout, addr, addr.GetAddressType(), value);
+        Assert.True(false);
+      }
+      catch (ArgumentException argErr)
+      {
+        output.WriteLine(argErr.ToString());
+        Assert.Contains("CFD error[SignVerificationError] message:Signature order is incorrect.", argErr.ToString());
+      }
+      catch (Exception e)
+      {
+        Assert.Null(e);
+      }
     }
 
     [Fact]

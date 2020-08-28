@@ -1786,16 +1786,16 @@ namespace Cfd
       }
     }
 
-    public bool VerifySign(OutPoint outpoint, Address address, CfdAddressType addressType, ConfidentialValue value)
+    public void VerifySign(OutPoint outpoint, Address address, CfdAddressType addressType, ConfidentialValue value)
     {
       if (outpoint is null)
       {
         throw new ArgumentNullException(nameof(outpoint));
       }
-      return VerifySign(outpoint.GetTxid(), outpoint.GetVout(), address, addressType, value);
+      VerifySign(outpoint.GetTxid(), outpoint.GetVout(), address, addressType, value);
     }
 
-    public bool VerifySign(Txid txid, uint vout, Address address, CfdAddressType addressType, ConfidentialValue value)
+    public void VerifySign(Txid txid, uint vout, Address address, CfdAddressType addressType, ConfidentialValue value)
     {
       if (txid is null)
       {
@@ -1816,16 +1816,11 @@ namespace Cfd
             address.ToAddressString(), (int)addressType, "",
             value.GetSatoshiValue(),
             (value.HasBlinding()) ? value.ToHexString() : "");
-        if (ret == CfdErrorCode.Success)
-        {
-          return true;
-        }
-        else if (ret != CfdErrorCode.SignVerificationError)
+        if (ret != CfdErrorCode.Success)
         {
           handle.ThrowError(ret);
         }
       }
-      return false;
     }
 
     public bool VerifySignature(Txid txid, uint vout, CfdHashType hashType,
