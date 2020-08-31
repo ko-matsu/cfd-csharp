@@ -818,10 +818,10 @@ namespace Cfd.xTests
       // estimate fee on blind tx
       FeeData feeData = tx.EstimateFee(utxos, new ConfidentialAsset("186c7f955149a5274b39e24b6a50d1d6479f552f6522d91f3a97d771f1c18179"));
       Assert.Equal(549, feeData.TxFee);
-      Assert.Equal(206, feeData.InputFee);
-      Assert.Equal(755, feeData.InputFee + feeData.TxFee);
+      Assert.Equal(206, feeData.UtxoFee);
+      Assert.Equal(755, feeData.UtxoFee + feeData.TxFee);
 
-      tx.UpdateFee(feeData.InputFee + feeData.TxFee,
+      tx.UpdateFee(feeData.UtxoFee + feeData.TxFee,
         new ConfidentialAsset("186c7f955149a5274b39e24b6a50d1d6479f552f6522d91f3a97d771f1c18179"));
     }
 
@@ -872,9 +872,9 @@ namespace Cfd.xTests
         utxos[9],
       };
       FeeData feeData = tx.EstimateFee(feeUtxos, feeRate, feeAsset, true);
-      Assert.Equal(501, feeData.TxFee + feeData.InputFee);
+      Assert.Equal(501, feeData.TxFee + feeData.UtxoFee);
       Assert.Equal(482, feeData.TxFee);
-      Assert.Equal(19, feeData.InputFee);
+      Assert.Equal(19, feeData.UtxoFee);
     }
 
     [Fact]
@@ -964,9 +964,9 @@ namespace Cfd.xTests
         utxos[9],
       };
       FeeData feeData = tx.EstimateFee(feeUtxos, feeRate, feeAsset, true);
-      Assert.Equal(873, feeData.TxFee + feeData.InputFee);
+      Assert.Equal(873, feeData.TxFee + feeData.UtxoFee);
       Assert.Equal(726, feeData.TxFee);
-      Assert.Equal(147, feeData.InputFee);
+      Assert.Equal(147, feeData.UtxoFee);
     }
 
     [Fact]

@@ -268,7 +268,7 @@ namespace Cfd.xTests
 
       FeeData feeData = tx.EstimateFee(new[] { utxos[1], utxos[2] }, 10.0);
       Assert.Equal(720, feeData.TxFee);
-      Assert.Equal(1800, feeData.InputFee);
+      Assert.Equal(1800, feeData.UtxoFee);
     }
 
     [Fact]
@@ -336,9 +336,9 @@ namespace Cfd.xTests
         utxos[0],
       };
       FeeData feeData = tx.EstimateFee(feeUtxos, feeRate);
-      Assert.Equal(7460, feeData.TxFee + feeData.InputFee);
+      Assert.Equal(7460, feeData.TxFee + feeData.UtxoFee);
       Assert.Equal(2060, feeData.TxFee);
-      Assert.Equal(5400, feeData.InputFee);
+      Assert.Equal(5400, feeData.UtxoFee);
     }
 
     static UtxoData[] GetBitcoinBnbUtxoList(CfdNetworkType netType)
