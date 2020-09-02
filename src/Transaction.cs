@@ -39,23 +39,26 @@ namespace Cfd
 
   public struct FeeData : IEquatable<FeeData>
   {
-    public long TxFee { get; }
+    public long TxOutFee { get; }
     public long UtxoFee { get; }
     [Obsolete("deprecated: Replaced to UtxoFee.")]
     public long InputFee { get; }
+    [Obsolete("deprecated: Replaced to TxOutFee.")]
+    public long TxFee { get; }
 
     public FeeData(long txFee, long utxoFee)
     {
-      TxFee = txFee;
+      TxOutFee = txFee;
       UtxoFee = utxoFee;
-      #pragma warning disable CS0618
+#pragma warning disable CS0618
+      TxFee = txFee;
       InputFee = utxoFee;
-      #pragma warning restore CS0618
+#pragma warning restore CS0618
     }
 
     public bool Equals(FeeData other)
     {
-      return (TxFee == other.TxFee) && (UtxoFee == other.UtxoFee);
+      return (TxOutFee == other.TxOutFee) && (UtxoFee == other.UtxoFee);
     }
 
     public override bool Equals(object obj)
@@ -73,7 +76,7 @@ namespace Cfd
 
     public override int GetHashCode()
     {
-      return TxFee.GetHashCode() + UtxoFee.GetHashCode();
+      return TxOutFee.GetHashCode() + UtxoFee.GetHashCode();
     }
 
     public static bool operator ==(FeeData left, FeeData right)

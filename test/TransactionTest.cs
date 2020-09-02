@@ -267,7 +267,7 @@ namespace Cfd.xTests
       });
 
       FeeData feeData = tx.EstimateFee(new[] { utxos[1], utxos[2] }, 10.0);
-      Assert.Equal(720, feeData.TxFee);
+      Assert.Equal(720, feeData.TxOutFee);
       Assert.Equal(1800, feeData.UtxoFee);
     }
 
@@ -336,8 +336,8 @@ namespace Cfd.xTests
         utxos[0],
       };
       FeeData feeData = tx.EstimateFee(feeUtxos, feeRate);
-      Assert.Equal(7460, feeData.TxFee + feeData.UtxoFee);
-      Assert.Equal(2060, feeData.TxFee);
+      Assert.Equal(7460, feeData.TxOutFee + feeData.UtxoFee);
+      Assert.Equal(2060, feeData.TxOutFee);
       Assert.Equal(5400, feeData.UtxoFee);
     }
 

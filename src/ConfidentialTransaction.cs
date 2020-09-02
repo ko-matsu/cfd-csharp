@@ -747,6 +747,10 @@ namespace Cfd
       });
     }
 
+    /// <summary>
+    /// Add transction input list.
+    /// </summary>
+    /// <param name="txinList">tx input list.</param>
     public void AddTxInList(ConfidentialTxIn[] txinList)
     {
       tx = CreateTransaction(0, 0, tx, txinList, null);
