@@ -17,7 +17,7 @@ namespace Cfd
     public TxHandle(ErrorHandle errorhandle, int networkType, string txHex)
     {
       var ret = NativeMethods.CfdInitializeTxDataHandle(
-        errorhandle.GetHandle(), networkType, txHex,out IntPtr newHandle);
+        errorhandle.GetHandle(), networkType, txHex, out IntPtr newHandle);
       if ((ret != CfdErrorCode.Success) || (newHandle == IntPtr.Zero))
       {
         throw new InvalidOperationException();

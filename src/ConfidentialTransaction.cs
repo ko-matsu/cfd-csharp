@@ -2730,7 +2730,7 @@ namespace Cfd
     {
       var ret = NativeMethods.CfdGetTxOutIndexByHandle(
           handle.GetHandle(), txHandle.GetHandle(),
-          address,lockingScript,
+          address, lockingScript,
           out uint index);
       if (ret != CfdErrorCode.Success)
       {
