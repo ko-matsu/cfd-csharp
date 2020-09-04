@@ -62,7 +62,7 @@ namespace Cfd
     /// <param name="knapsackMinChange">knapsack min change value. knapsack logic's threshold. Recommended value is 1.</param>
     /// <returns>select utxo list.</returns>
     public UtxoData[] SelectCoins(UtxoData[] utxoList, long txFeeAmount, long targetAmount,
-      double effectiveFeeRate, double longTermFeeRate, long dustFeeRate, long knapsackMinChange)
+      double effectiveFeeRate, double longTermFeeRate, double dustFeeRate, long knapsackMinChange)
     {
       if (utxoList is null)
       {
@@ -216,7 +216,7 @@ namespace Cfd
       ConfidentialAsset feeAsset, long txFeeAmount,
       double effectiveFeeRate, int exponent, int minimumBits,
       double longTermFeeRate,
-      long dustFeeRate, long knapsackMinChange)
+      double dustFeeRate, long knapsackMinChange)
     {
       if (utxoList is null)
       {
