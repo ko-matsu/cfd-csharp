@@ -1961,7 +1961,7 @@ namespace Cfd
       }
     }
 
-    private TxIn GetInputByIndex(ErrorHandle handle, TxHandle txHandle, uint index)
+    private static TxIn GetInputByIndex(ErrorHandle handle, TxHandle txHandle, uint index)
     {
       var ret = NativeMethods.CfdGetTxInByHandle(
           handle.GetHandle(), txHandle.GetHandle(), index,
@@ -2005,7 +2005,7 @@ namespace Cfd
           new ScriptWitness(witnessArray));
     }
 
-    private uint GetInputCount(ErrorHandle handle, TxHandle txHandle)
+    private static uint GetInputCount(ErrorHandle handle, TxHandle txHandle)
     {
       var ret = NativeMethods.CfdGetTxInCountByHandle(
           handle.GetHandle(), txHandle.GetHandle(), out uint count);
@@ -2016,7 +2016,7 @@ namespace Cfd
       return count;
     }
 
-    private TxOut GetOutputByIndex(ErrorHandle handle, TxHandle txHandle, uint index)
+    private static TxOut GetOutputByIndex(ErrorHandle handle, TxHandle txHandle, uint index)
     {
       var ret = NativeMethods.CfdGetTxOutByHandle(
           handle.GetHandle(), txHandle.GetHandle(), index,
@@ -2033,7 +2033,7 @@ namespace Cfd
       return new TxOut(satoshi, new Script(scriptPubkey));
     }
 
-    private uint GetOutputCount(ErrorHandle handle, TxHandle txHandle)
+    private static uint GetOutputCount(ErrorHandle handle, TxHandle txHandle)
     {
       var ret = NativeMethods.CfdGetTxOutCountByHandle(
           handle.GetHandle(), txHandle.GetHandle(), out uint count);
@@ -2044,7 +2044,7 @@ namespace Cfd
       return count;
     }
 
-    private uint GetTxInIndexInternal(ErrorHandle handle, TxHandle txHandle, OutPoint outpoint)
+    private static uint GetTxInIndexInternal(ErrorHandle handle, TxHandle txHandle, OutPoint outpoint)
     {
       if (outpoint is null)
       {
@@ -2062,7 +2062,7 @@ namespace Cfd
       return index;
     }
 
-    private uint GetTxOutIndexInternal(ErrorHandle handle, TxHandle txHandle, string address, string lockingScript)
+    private static uint GetTxOutIndexInternal(ErrorHandle handle, TxHandle txHandle, string address, string lockingScript)
     {
       var ret = NativeMethods.CfdGetTxOutIndexByHandle(
           handle.GetHandle(), txHandle.GetHandle(),
