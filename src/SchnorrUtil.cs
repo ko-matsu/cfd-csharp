@@ -86,9 +86,9 @@ namespace Cfd
     /// </summary>
     /// <param name="msg">32-byte msg</param>
     /// <param name="nonce">schnorr nonce</param>
-    /// <param name="pubkey">pubkey</param>
+    /// <param name="schnorrPubkey">pubkey</param>
     /// <returns>signature point</returns>
-    public static Pubkey ComputeSigPoint(ByteData msg, ByteData nonce, Pubkey pubkey)
+    public static Pubkey ComputeSigPoint(ByteData msg, ByteData nonce, ByteData schnorrPubkey)
     {
       if (msg is null)
       {
@@ -98,15 +98,15 @@ namespace Cfd
       {
         throw new ArgumentNullException(nameof(nonce));
       }
-      if (pubkey is null)
+      if (schnorrPubkey is null)
       {
-        throw new ArgumentNullException(nameof(pubkey));
+        throw new ArgumentNullException(nameof(schnorrPubkey));
       }
       using (var handle = new ErrorHandle())
       {
         var ret = NativeMethods.CfdComputeSchnorrSigPoint(
             handle.GetHandle(), msg.ToHexString(),
-            nonce.ToHexString(), pubkey.ToHexString(),
+            nonce.ToHexString(), schnorrPubkey.ToHexString(),
             out IntPtr sigPoint);
         if (ret != CfdErrorCode.Success)
         {
@@ -122,9 +122,9 @@ namespace Cfd
     /// </summary>
     /// <param name="signature">schnorr signature</param>
     /// <param name="msg">32-byte msg</param>
-    /// <param name="pubkey">pubkey</param>
+    /// <param name="schnorrPubkey">pubkey</param>
     /// <returns>verify result</returns>
-    public static bool Verify(SchnorrSignature signature, ByteData msg, Pubkey pubkey)
+    public static bool Verify(SchnorrSignature signature, ByteData msg, ByteData schnorrPubkey)
     {
       if (signature is null)
       {
@@ -134,16 +134,16 @@ namespace Cfd
       {
         throw new ArgumentNullException(nameof(msg));
       }
-      if (pubkey is null)
+      if (schnorrPubkey is null)
       {
-        throw new ArgumentNullException(nameof(pubkey));
+        throw new ArgumentNullException(nameof(schnorrPubkey));
       }
       using (var handle = new ErrorHandle())
       {
         var ret = NativeMethods.CfdVerifySchnorr(
             handle.GetHandle(), signature.ToHexString(),
             msg.ToHexString(),
-            pubkey.ToHexString());
+            schnorrPubkey.ToHexString());
         if (ret == CfdErrorCode.Success)
         {
           return true;
