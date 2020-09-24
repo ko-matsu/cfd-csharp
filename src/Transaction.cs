@@ -673,6 +673,10 @@ namespace Cfd
       tx = CreateTransaction(0, 0, tx, null, new[] { txout });
     }
 
+    /// <summary>
+    /// Add transaction output list.
+    /// </summary>
+    /// <param name="txoutList">txout list</param>
     public void AddTxOutList(TxOut[] txoutList)
     {
       tx = CreateTransaction(0, 0, tx, null, txoutList);
@@ -1416,7 +1420,7 @@ namespace Cfd
     }
 
     /// <summary>
-    /// Verification sign on transaction.
+    /// Verify sign on transaction. (only pubkey hash or multisig script)
     /// </summary>
     /// <param name="outpoint">utxo outpoint.</param>
     /// <param name="address">utxo address.</param>
@@ -1432,7 +1436,7 @@ namespace Cfd
     }
 
     /// <summary>
-    /// Verification sign on transaction.
+    /// Verify sign on transaction. (only pubkey hash or multisig script)
     /// </summary>
     /// <param name="txid">utxo outpoint txid.</param>
     /// <param name="vout">utxo outpoint vout.</param>
@@ -1462,6 +1466,16 @@ namespace Cfd
       }
     }
 
+    /// <summary>
+    /// Verify signature for pubkey hash.
+    /// </summary>
+    /// <param name="outpoint">utxo outpoint</param>
+    /// <param name="hashType">hash type</param>
+    /// <param name="signature">signature</param>
+    /// <param name="pubkey">signed pubkey</param>
+    /// <param name="sighashType">sighash type</param>
+    /// <param name="satoshiValue">satoshi amount</param>
+    /// <returns>true or false</returns>
     public bool VerifySignature(OutPoint outpoint, CfdHashType hashType,
         SignParameter signature, Pubkey pubkey, SignatureHashType sighashType, long satoshiValue)
     {
@@ -1472,6 +1486,16 @@ namespace Cfd
       return VerifySignature(outpoint, hashType, signature.GetData(), pubkey, sighashType, satoshiValue);
     }
 
+    /// <summary>
+    /// Verify signature for pubkey hash.
+    /// </summary>
+    /// <param name="outpoint">utxo outpoint</param>
+    /// <param name="hashType">hash type</param>
+    /// <param name="signature">signature</param>
+    /// <param name="pubkey">signed pubkey</param>
+    /// <param name="sighashType">sighash type</param>
+    /// <param name="satoshiValue">satoshi amount</param>
+    /// <returns>true or false</returns>
     public bool VerifySignature(OutPoint outpoint, CfdHashType hashType,
         ByteData signature, Pubkey pubkey, SignatureHashType sighashType, long satoshiValue)
     {
@@ -1482,6 +1506,17 @@ namespace Cfd
       return VerifySignature(outpoint.GetTxid(), outpoint.GetVout(), hashType, signature, pubkey, sighashType, satoshiValue);
     }
 
+    /// <summary>
+    /// Verify signature for pubkey hash.
+    /// </summary>
+    /// <param name="txid">utxo txid</param>
+    /// <param name="vout">utxo vout</param>
+    /// <param name="hashType">hash type</param>
+    /// <param name="signature">signature</param>
+    /// <param name="pubkey">signed pubkey</param>
+    /// <param name="sighashType">sighash type</param>
+    /// <param name="satoshiValue">satoshi amount</param>
+    /// <returns>true or false</returns>
     public bool VerifySignature(Txid txid, uint vout, CfdHashType hashType,
         ByteData signature, Pubkey pubkey, SignatureHashType sighashType, long satoshiValue)
     {
@@ -1523,6 +1558,17 @@ namespace Cfd
       return false;
     }
 
+    /// <summary>
+    /// Verify signature for script hash.
+    /// </summary>
+    /// <param name="outpoint">utxo outpoint</param>
+    /// <param name="hashType">hash type</param>
+    /// <param name="signature">signature</param>
+    /// <param name="pubkey">signed pubkey</param>
+    /// <param name="redeemScript">utxo's redeem script</param>
+    /// <param name="sighashType">sighash type</param>
+    /// <param name="satoshiValue">satoshi amount</param>
+    /// <returns>true or false</returns>
     public bool VerifySignature(OutPoint outpoint, CfdHashType hashType,
         SignParameter signature, Pubkey pubkey, Script redeemScript, SignatureHashType sighashType, long satoshiValue)
     {
@@ -1533,6 +1579,17 @@ namespace Cfd
       return VerifySignature(outpoint, hashType, signature.GetData(), pubkey, redeemScript, sighashType, satoshiValue);
     }
 
+    /// <summary>
+    /// Verify signature for script hash.
+    /// </summary>
+    /// <param name="outpoint">utxo outpoint</param>
+    /// <param name="hashType">hash type</param>
+    /// <param name="signature">signature</param>
+    /// <param name="pubkey">signed pubkey</param>
+    /// <param name="redeemScript">utxo's redeem script</param>
+    /// <param name="sighashType">sighash type</param>
+    /// <param name="satoshiValue">satoshi amount</param>
+    /// <returns>true or false</returns>
     public bool VerifySignature(OutPoint outpoint, CfdHashType hashType,
         ByteData signature, Pubkey pubkey, Script redeemScript, SignatureHashType sighashType, long satoshiValue)
     {
@@ -1543,6 +1600,18 @@ namespace Cfd
       return VerifySignature(outpoint.GetTxid(), outpoint.GetVout(), hashType, signature, pubkey, redeemScript, sighashType, satoshiValue);
     }
 
+    /// <summary>
+    /// Verify signature for script hash.
+    /// </summary>
+    /// <param name="txid">utxo txid</param>
+    /// <param name="vout">utxo vout</param>
+    /// <param name="hashType">hash type</param>
+    /// <param name="signature">signature</param>
+    /// <param name="pubkey">signed pubkey</param>
+    /// <param name="redeemScript">utxo's redeem script</param>
+    /// <param name="sighashType">sighash type</param>
+    /// <param name="satoshiValue">satoshi amount</param>
+    /// <returns>true or false</returns>
     public bool VerifySignature(Txid txid, uint vout, CfdHashType hashType, ByteData signature,
       Pubkey pubkey, Script redeemScript, SignatureHashType sighashType, long satoshiValue)
     {
@@ -1588,6 +1657,12 @@ namespace Cfd
       return false;
     }
 
+    /// <summary>
+    /// Estimate fee.
+    /// </summary>
+    /// <param name="txinList">txin's utxo list</param>
+    /// <param name="feeRate">fee rate</param>
+    /// <returns>fee data</returns>
     public FeeData EstimateFee(UtxoData[] txinList, double feeRate)
     {
       if (txinList is null)
@@ -1633,6 +1708,14 @@ namespace Cfd
       }
     }
 
+    /// <summary>
+    /// Fund transaction.
+    /// </summary>
+    /// <param name="txinList">setting txin utxo list</param>
+    /// <param name="utxoList">utxo list</param>
+    /// <param name="reservedAddress">address for adding txout. Also serves as a change address.</param>
+    /// <param name="effectiveFeeRate">fee rate</param>
+    /// <returns>used address.</returns>
     public string FundRawTransaction(UtxoData[] txinList, UtxoData[] utxoList,
       string reservedAddress, double effectiveFeeRate)
     {
@@ -1651,7 +1734,7 @@ namespace Cfd
     /// <param name="longTermFeeRate">long-term fee rate</param>
     /// <param name="dustFeeRate">dust fee rate</param>
     /// <param name="knapsackMinChange">knapsack min change value. knapsack logic's threshold. Recommended value is 1.</param>
-    /// <returns>used address list.</returns>
+    /// <returns>used address.</returns>
     public string FundRawTransaction(UtxoData[] txinList, UtxoData[] utxoList,
       long targetAmount, string reservedAddress,
       double effectiveFeeRate, double longTermFeeRate, double dustFeeRate, long knapsackMinChange)
@@ -1771,16 +1854,28 @@ namespace Cfd
       }
     }
 
+    /// <summary>
+    /// Get transaction hex.
+    /// </summary>
+    /// <returns>transaction hex</returns>
     public string ToHexString()
     {
       return tx;
     }
 
+    /// <summary>
+    /// Get transaction byte array.
+    /// </summary>
+    /// <returns>byte array</returns>
     public byte[] GetBytes()
     {
       return StringUtil.ToBytes(tx);
     }
 
+    /// <summary>
+    /// Get txid.
+    /// </summary>
+    /// <returns>txid</returns>
     public Txid GetTxid()
     {
       UpdateTxInfoCache();
@@ -1823,6 +1918,10 @@ namespace Cfd
       return txLocktime;
     }
 
+    /// <summary>
+    /// Get last fundrawtransaction's transaction fee.
+    /// </summary>
+    /// <returns>transaction fee</returns>
     public long GetLastTxFee()
     {
       return lastTxFee;
