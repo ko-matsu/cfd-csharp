@@ -3,72 +3,67 @@ using System;
 namespace Cfd
 {
   /// <summary>
-  /// Schnorr signature class.
+  /// Schnorr public key class.
   /// </summary>
-  public class SchnorrSignature : IEquatable<SchnorrSignature>
+  public class SchnorrPubkey : IEquatable<SchnorrPubkey>
   {
-    public static readonly uint Size = 64;
+    public static readonly uint Size = 32;
     private readonly string data;
-    private readonly SchnorrPubkey nonce;
-    private readonly Privkey key;
 
     /// <summary>
     /// Constructor. (empty)
     /// </summary>
-    public SchnorrSignature()
+    public SchnorrPubkey()
     {
       data = "";
-      nonce = new SchnorrPubkey();
-      key = new Privkey();
     }
 
     /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="bytes">byte array</param>
-    public SchnorrSignature(byte[] bytes)
+    public SchnorrPubkey(byte[] bytes)
     {
       if ((bytes == null) || (bytes.Length != Size))
       {
-        CfdCommon.ThrowError(CfdErrorCode.IllegalArgumentError, "Failed to signature size.");
+        CfdCommon.ThrowError(CfdErrorCode.IllegalArgumentError, "Failed to pubkey size.");
       }
       data = StringUtil.FromBytes(bytes);
-      string[] list = Verify(data);
-      nonce = new SchnorrPubkey(list[0]);
-      key = new Privkey(list[1]);
     }
 
     /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="hex">hex string</param>
-    public SchnorrSignature(string hex)
+    public SchnorrPubkey(string hex)
     {
       if ((hex == null) || (hex.Length != Size * 2))
       {
-        CfdCommon.ThrowError(CfdErrorCode.IllegalArgumentError, "Failed to signature size.");
+        CfdCommon.ThrowError(CfdErrorCode.IllegalArgumentError, "Failed to pubkey size.");
       }
       data = hex;
-      string[] list = Verify(data);
-      nonce = new SchnorrPubkey(list[0]);
-      key = new Privkey(list[1]);
     }
 
-    string[] Verify(string signature)
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="privkey">private key</param>
+    public SchnorrPubkey(Privkey privkey)
     {
+      if (privkey is null)
+      {
+        throw new ArgumentNullException(nameof(privkey));
+      }
       using (var handle = new ErrorHandle())
       {
-        var ret = NativeMethods.CfdSplitSchnorrSignature(
-            handle.GetHandle(), signature,
-            out IntPtr schnorrNonce,
-            out IntPtr privkey);
+        var ret = NativeMethods.CfdGetSchnorrPubkeyFromPrivkey(
+            handle.GetHandle(), privkey.ToHexString(),
+            out IntPtr pubkey);
         if (ret != CfdErrorCode.Success)
         {
           handle.ThrowError(ret);
         }
-        string nonceStr = CCommon.ConvertToString(schnorrNonce);
-        string keyStr = CCommon.ConvertToString(privkey);
-        return new string[] { nonceStr, keyStr };
+        data = CCommon.ConvertToString(pubkey);
       }
     }
 
@@ -90,30 +85,12 @@ namespace Cfd
       return StringUtil.ToBytes(data);
     }
 
-    /// <summary>
-    /// get nonce data.
-    /// </summary>
-    /// <returns>nonce data</returns>
-    public SchnorrPubkey GetNonce()
-    {
-      return nonce;
-    }
-
-    /// <summary>
-    /// get key data.
-    /// </summary>
-    /// <returns>key data</returns>
-    public Privkey GetKey()
-    {
-      return key;
-    }
-
     public bool IsValid()
     {
       return data.Length == Size;
     }
 
-    public bool Equals(SchnorrSignature other)
+    public bool Equals(SchnorrPubkey other)
     {
       if (other is null)
       {
@@ -132,9 +109,9 @@ namespace Cfd
       {
         return false;
       }
-      if ((obj as SchnorrSignature) != null)
+      if ((obj as SchnorrPubkey) != null)
       {
-        return Equals((SchnorrSignature)obj);
+        return Equals((SchnorrPubkey)obj);
       }
       return false;
     }
@@ -144,7 +121,7 @@ namespace Cfd
       return data.GetHashCode(StringComparison.Ordinal);
     }
 
-    public static bool operator ==(SchnorrSignature lhs, SchnorrSignature rhs)
+    public static bool operator ==(SchnorrPubkey lhs, SchnorrPubkey rhs)
     {
       if (lhs is null)
       {
@@ -157,7 +134,7 @@ namespace Cfd
       return lhs.Equals(rhs);
     }
 
-    public static bool operator !=(SchnorrSignature lhs, SchnorrSignature rhs)
+    public static bool operator !=(SchnorrPubkey lhs, SchnorrPubkey rhs)
     {
       return !(lhs == rhs);
     }

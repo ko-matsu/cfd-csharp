@@ -88,7 +88,7 @@ namespace Cfd
     /// <param name="nonce">schnorr nonce</param>
     /// <param name="schnorrPubkey">pubkey</param>
     /// <returns>signature point</returns>
-    public static Pubkey ComputeSigPoint(ByteData msg, ByteData nonce, ByteData schnorrPubkey)
+    public static Pubkey ComputeSigPoint(ByteData msg, SchnorrPubkey nonce, SchnorrPubkey schnorrPubkey)
     {
       if (msg is null)
       {
@@ -124,7 +124,7 @@ namespace Cfd
     /// <param name="msg">32-byte msg</param>
     /// <param name="schnorrPubkey">pubkey</param>
     /// <returns>verify result</returns>
-    public static bool Verify(SchnorrSignature signature, ByteData msg, ByteData schnorrPubkey)
+    public static bool Verify(SchnorrSignature signature, ByteData msg, SchnorrPubkey schnorrPubkey)
     {
       if (signature is null)
       {
