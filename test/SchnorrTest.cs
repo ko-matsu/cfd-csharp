@@ -37,11 +37,14 @@ namespace Cfd.xTests
     {
       var msg = new ByteData("e48441762fb75010b2aa31a512b62b4148aa3fb08eb0765d76b252559064a614");
       var sk = new Privkey("688c77bc2d5aaff5491cf309d4753b732135470d05b7b2cd21add0744fe97bef");
-      var pubkey = new ByteData("b33cc9edc096d0a83416964bd3c6247b8fecd256e4efa7870d2c854bdeb33390");
+      var pubkey = new SchnorrPubkey("b33cc9edc096d0a83416964bd3c6247b8fecd256e4efa7870d2c854bdeb33390");
       var auxRand = new ByteData("02cce08e913f22a36c5648d6405a2c7c50106e7aa2f1649e381c7f09d16b80ab");
       var nonce = new ByteData("8c8ca771d3c25eb38de7401818eeda281ac5446f5c1396148f8d9d67592440fe");
-      var schnorrNonce = new ByteData("f14d7e54ff58c5d019ce9986be4a0e8b7d643bd08ef2cdf1099e1a457865b547");
+      var schnorrNonce = new SchnorrPubkey("f14d7e54ff58c5d019ce9986be4a0e8b7d643bd08ef2cdf1099e1a457865b547");
       var signature = new SchnorrSignature("6470fd1303dda4fda717b9837153c24a6eab377183fc438f939e0ed2b620e9ee5077c4a8b8dca28963d772a94f5f0ddf598e1c47c137f91933274c7c3edadce8");
+
+      var schnorrPubkey = new SchnorrPubkey(sk);
+      Assert.Equal(pubkey.ToHexString(), schnorrPubkey.ToHexString());
 
       var sig = SchnorrUtil.Sign(msg, sk, auxRand);
       Assert.Equal(signature.ToHexString(), sig.ToHexString());

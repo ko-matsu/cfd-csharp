@@ -800,6 +800,12 @@ namespace Cfd
           [In] string pubkey);
 
     [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdGetSchnorrPubkeyFromPrivkey(
+          [In] IntPtr handle,
+          [In] string privkey,
+          [Out] out IntPtr pubkey);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
     internal static extern CfdErrorCode CfdSignSchnorr(
           [In] IntPtr handle,
           [In] string msg,
