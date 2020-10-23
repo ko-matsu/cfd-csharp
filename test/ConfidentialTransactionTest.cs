@@ -837,6 +837,9 @@ namespace Cfd.xTests
         new ConfidentialTxOut(new ConfidentialAsset(assetA), new ConfidentialValue(10000000), setAddr1.GetLockingScript()),
         new ConfidentialTxOut(new ConfidentialAsset(assetB), new ConfidentialValue(500000), setAddr2.GetLockingScript()),
       });
+      output.WriteLine("tx: " + tx.ToHexString());
+      Assert.Equal("020000000000020100000000000000000000000000000000000000000000000000000000000000aa010000000000989680001600144352a1a6e86311f22274f7ebb2746de21b09b15d0100000000000000000000000000000000000000000000000000000000000000bb01000000000007a120001600148beaaac4654cf4ebd8e46ca5062b0e7fb3e7470c00000000",
+        tx.ToHexString());
 
       var feeAsset = new ConfidentialAsset(assetA);
       var targetAssetMap = new Dictionary<ConfidentialAsset, long> {
