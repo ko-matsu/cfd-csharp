@@ -45,10 +45,11 @@ namespace Cfd
     }
 
     /// <summary>
-    /// Constructor.
+    /// Get Schnorr public key from private key.
     /// </summary>
     /// <param name="privkey">private key</param>
-    public SchnorrPubkey(Privkey privkey)
+    /// <param name="parity">parity flag</param>
+    public static SchnorrPubkey GetPubkeyFromPrivkey(Privkey privkey, out bool parity)
     {
       if (privkey is null)
       {
@@ -58,12 +59,13 @@ namespace Cfd
       {
         var ret = NativeMethods.CfdGetSchnorrPubkeyFromPrivkey(
             handle.GetHandle(), privkey.ToHexString(),
-            out IntPtr pubkey);
+            out IntPtr pubkey, out parity);
         if (ret != CfdErrorCode.Success)
         {
           handle.ThrowError(ret);
         }
-        data = CCommon.ConvertToString(pubkey);
+        string data = CCommon.ConvertToString(pubkey);
+        return new SchnorrPubkey(data);
       }
     }
 

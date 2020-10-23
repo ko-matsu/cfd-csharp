@@ -803,7 +803,8 @@ namespace Cfd
     internal static extern CfdErrorCode CfdGetSchnorrPubkeyFromPrivkey(
           [In] IntPtr handle,
           [In] string privkey,
-          [Out] out IntPtr pubkey);
+          [Out] out IntPtr pubkey,
+          [Out] out bool parity);
 
     [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
     internal static extern CfdErrorCode CfdSignSchnorr(

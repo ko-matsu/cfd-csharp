@@ -43,8 +43,9 @@ namespace Cfd.xTests
       var schnorrNonce = new SchnorrPubkey("f14d7e54ff58c5d019ce9986be4a0e8b7d643bd08ef2cdf1099e1a457865b547");
       var signature = new SchnorrSignature("6470fd1303dda4fda717b9837153c24a6eab377183fc438f939e0ed2b620e9ee5077c4a8b8dca28963d772a94f5f0ddf598e1c47c137f91933274c7c3edadce8");
 
-      var schnorrPubkey = new SchnorrPubkey(sk);
+      var schnorrPubkey = SchnorrPubkey.GetPubkeyFromPrivkey(sk, out bool parity);
       Assert.Equal(pubkey.ToHexString(), schnorrPubkey.ToHexString());
+      Assert.True(parity);
 
       var sig = SchnorrUtil.Sign(msg, sk, auxRand);
       Assert.Equal(signature.ToHexString(), sig.ToHexString());
