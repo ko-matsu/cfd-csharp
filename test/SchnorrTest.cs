@@ -43,10 +43,6 @@ namespace Cfd.xTests
       var schnorrNonce = new SchnorrPubkey("f14d7e54ff58c5d019ce9986be4a0e8b7d643bd08ef2cdf1099e1a457865b547");
       var signature = new SchnorrSignature("6470fd1303dda4fda717b9837153c24a6eab377183fc438f939e0ed2b620e9ee5077c4a8b8dca28963d772a94f5f0ddf598e1c47c137f91933274c7c3edadce8");
 
-      var schnorrPubkey = SchnorrPubkey.GetPubkeyFromPrivkey(sk, out bool parity);
-      Assert.Equal(pubkey.ToHexString(), schnorrPubkey.ToHexString());
-      Assert.True(parity);
-
       var sig = SchnorrUtil.Sign(msg, sk, auxRand);
       Assert.Equal(signature.ToHexString(), sig.ToHexString());
 
@@ -69,6 +65,40 @@ namespace Cfd.xTests
           "5077c4a8b8dca28963d772a94f5f0ddf598e1c47c137f91933274c7c3edadce8";
       Assert.Equal(expectedNonce, sig.GetNonce().ToHexString());
       Assert.Equal(expectedPrivkey, sig.GetKey().ToHexString());
+    }
+
+    [Fact]
+    public void SchnorrKeyTest()
+    {
+      var tweak = new ByteData("e48441762fb75010b2aa31a512b62b4148aa3fb08eb0765d76b252559064a614");
+      var sk = new Privkey("688c77bc2d5aaff5491cf309d4753b732135470d05b7b2cd21add0744fe97bef");
+      var pk = new Pubkey("03b33cc9edc096d0a83416964bd3c6247b8fecd256e4efa7870d2c854bdeb33390");
+      var pubkey = new SchnorrPubkey("b33cc9edc096d0a83416964bd3c6247b8fecd256e4efa7870d2c854bdeb33390");
+      var expTweakedPk = new SchnorrPubkey("1fc8e882e34cc7942a15f39ffaebcbdf58a19239bcb17b7f5aa88e0eb808f906");
+      // bool expTweakedParity = true;
+      var expTweakedSk = new Privkey("7bf7c9ba025ca01b698d3e9b3e40efce2774f8a388f8c390550481e1407b2a25");
+
+      var schnorrPubkey = SchnorrPubkey.GetPubkeyFromPrivkey(sk, out bool parity);
+      Assert.Equal(pubkey.ToHexString(), schnorrPubkey.ToHexString());
+      Assert.True(parity);
+
+      var spk2 = SchnorrPubkey.GetPubkeyFromPubkey(pk, out parity);
+      Assert.Equal(pubkey.ToHexString(), spk2.ToHexString());
+      Assert.True(parity);
+
+      var tweakedPubkey = schnorrPubkey.TweakAdd(tweak, out parity);
+      Assert.Equal(expTweakedPk.ToHexString(), tweakedPubkey.ToHexString());
+      Assert.True(parity);
+
+      SchnorrPubkey.GetTweakAddKeyPair(sk, tweak, out SchnorrPubkey tweakedPubkey2, out parity, out Privkey tweakedPrivkey);
+      Assert.Equal(expTweakedPk.ToHexString(), tweakedPubkey2.ToHexString());
+      Assert.True(parity);
+      Assert.Equal(expTweakedSk.ToHexString(), tweakedPrivkey.ToHexString());
+
+      var isValid = tweakedPubkey.IsTweaked(parity, pubkey, tweak);
+      Assert.True(isValid);
+      isValid = tweakedPubkey.IsTweaked(!parity, pubkey, tweak);
+      Assert.False(isValid);
     }
   }
 }
