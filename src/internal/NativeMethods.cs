@@ -803,7 +803,40 @@ namespace Cfd
     internal static extern CfdErrorCode CfdGetSchnorrPubkeyFromPrivkey(
           [In] IntPtr handle,
           [In] string privkey,
-          [Out] out IntPtr pubkey);
+          [Out] out IntPtr pubkey,
+          [Out] out bool parity);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdGetSchnorrPubkeyFromPubkey(
+          [In] IntPtr handle,
+          [In] string pubkey,
+          [Out] out IntPtr schnorrPubkey,
+          [Out] out bool parity);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdSchnorrPubkeyTweakAdd(
+          [In] IntPtr handle,
+          [In] string pubkey,
+          [In] string tweak,
+          [Out] out IntPtr output,
+          [Out] out bool parity);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdSchnorrKeyPairTweakAdd(
+          [In] IntPtr handle,
+          [In] string privkey,
+          [In] string tweak,
+          [Out] out IntPtr tweakedPubkey,
+          [Out] out bool tweakedParity,
+          [Out] out IntPtr tweakedPrivkey);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdCheckTweakAddFromSchnorrPubkey(
+          [In] IntPtr handle,
+          [In] string tweakedPubkey,
+          [In] bool tweakedParity,
+          [In] string basePubkey,
+          [In] string tweak);
 
     [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
     internal static extern CfdErrorCode CfdSignSchnorr(
