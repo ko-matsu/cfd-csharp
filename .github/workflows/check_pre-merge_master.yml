@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15, macos-11.0, windows-latest, ubuntu-20.04, ubuntu-18.04]
+        os: [macos-10.15, macos-11.0, windows-2019, ubuntu-20.04, ubuntu-18.04]
         dotnet: [3.1.x]
 
     steps:
@@ -27,12 +27,12 @@ jobs:
         dotnet-version: ${{ matrix.dotnet }}
     - uses: actions/checkout@v2
     - name: build and test
-      if: matrix.os != 'windows-latest'
+      if: runner.os != 'Windows'
       run: |
         ./tools/build.sh
         ./tools/test.sh
     - name: build and test on win
-      if: matrix.os == 'windows-latest'
+      if: runner.os == 'Windows'
       run: |
         ./tools/build_core3.bat
         ./tools/test_core3.bat

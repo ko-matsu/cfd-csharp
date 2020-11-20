@@ -12,7 +12,7 @@ env:
 jobs:
   create_releases:
     name: create-releases
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     outputs:
       release_url: ${{ steps.output_url.outputs.upload_url }}
 
@@ -48,7 +48,7 @@ jobs:
   upload-object-windows:
     name: upload-object-win
     needs: create_releases
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
     - name: setup dotnet
@@ -148,7 +148,7 @@ jobs:
   upload-object-macos:
     name: upload-object-macos
     needs: create_releases
-    runs-on: macos-latest
+    runs-on: macos-18.04
 
     steps:
     - name: setup dotnet
