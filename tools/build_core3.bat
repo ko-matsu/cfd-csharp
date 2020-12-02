@@ -15,7 +15,7 @@ if not %ERRORLEVEL% == 0 (
 )
 
 cd dotnet_project/CfdCsharpProject
-CALL dotnet build -c Release
+CALL dotnet build -f netstandard2.1 -c Release
 if not %ERRORLEVEL% == 0 (
     cd ../..
     exit 1
@@ -23,7 +23,7 @@ if not %ERRORLEVEL% == 0 (
 cd ../..
 
 cd dotnet_project/CfdCsharpProject.xTests
-CALL dotnet build -c Release
+CALL dotnet build -f netcoreapp3.1 -c Release
 if not %ERRORLEVEL% == 0 (
     cd ../..
     exit 1
