@@ -148,7 +148,7 @@ jobs:
   upload-object-macos:
     name: upload-object-macos
     needs: create_releases
-    runs-on: macos-18.04
+    runs-on: macos-10.15
 
     steps:
     - name: setup dotnet
