@@ -1321,6 +1321,16 @@ namespace Cfd
         [In] string fullTxHex);
 
     [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdSetPsbtTxInUtxo(
+        [In] IntPtr handle,
+        [In] IntPtr psbtHandle,
+        [In] string txid,
+        [In] uint vout,
+        [In] long amount,
+        [In] string lockingScript,
+        [In] string fullTxHex);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
     internal static extern CfdErrorCode CfdSetPsbtTxInBip32Pubkey(
         [In] IntPtr handle,
         [In] IntPtr psbtHandle,
@@ -1490,12 +1500,41 @@ namespace Cfd
         [In] IntPtr pubkeyListHandle);
 
     [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdGetPsbtByteDataList(
+        [In] IntPtr handle,
+        [In] IntPtr psbtHandle,
+        [In] int kind,
+        [In] uint index,
+        [Out] out uint listNum,
+        [Out] out IntPtr dataListHandle);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdGetPsbtByteDataItem(
+        [In] IntPtr handle,
+        [In] IntPtr dataListHandle,
+        [In] uint index,
+        [Out] out IntPtr data);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdFreePsbtByteDataList(
+        [In] IntPtr handle,
+        [In] IntPtr dataListHandle);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
     internal static extern CfdErrorCode CfdAddPsbtGlobalXpubkey(
         [In] IntPtr handle,
         [In] IntPtr psbtHandle,
         [In] string xpubkey,
         [In] string fingerprint,
         [In] string bip32Path);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdSetPsbtRedeemScript(
+        [In] IntPtr handle,
+        [In] IntPtr psbtHandle,
+        [In] int type,
+        [In] uint index,
+        [In] string redeemScript);
 
     [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
     internal static extern CfdErrorCode CfdAddPsbtRecord(
@@ -1634,6 +1673,21 @@ namespace Cfd
         [In] string address,
         [In] string directLockingScript,
         [In] string asset);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdClearWitnessStack(
+        [In] IntPtr handle,
+        [In] IntPtr createHandle,
+        [In] string txid,
+        [In] uint vout);
+
+    [DllImport("cfd", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+    internal static extern CfdErrorCode CfdUpdateTxInScriptSig(
+        [In] IntPtr handle,
+        [In] IntPtr createHandle,
+        [In] string txid,
+        [In] uint vout,
+        [In] string scriptSig);
 
     [DllImport("cfd", CallingConvention = CallingConvention.StdCall)]
     internal static extern CfdErrorCode CfdFinalizeTransaction(
